@@ -7,8 +7,8 @@ This Python script is a simple HTTP brute-forcing tool designed to test the auth
 ## Install
 
 ```
- git clone [https://github.com/Bhanunamikaze/ESXiBrute.git](https://github.com/Bhanunamikaze/HTTPBrute.git)
- cd HTTPBrute
+git clone [https://github.com/Bhanunamikaze/ESXiBrute.git](https://github.com/Bhanunamikaze/HTTPBrute.git)
+cd HTTPBrute
 python HTTPBrute.py -u root -P /usr/share/wordlists/ssh_usernames.txt -url http://127.0.0.1 -m POST -e 401 -t 30
 ```
 
