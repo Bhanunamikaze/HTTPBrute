@@ -23,7 +23,7 @@ def make_http_request(username, password, url, pbar):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Simple HTTP Multi Threaderd Bruteforcer")
+    parser = argparse.ArgumentParser(description="Simple HTTP Multi Threaded Bruteforcer")
     parser.add_argument("-u", "--username", help="Specify a single username")
     parser.add_argument("-U", "--usernames_file", help="Specify a file containing a list of usernames (one per line)")
     parser.add_argument("-p", "--password", help="Specify a single password")
@@ -35,9 +35,11 @@ if __name__ == "__main__":
     parser.add_argument("-s", "--show_status", help="Specify status codes to show only (comma-separated)")
     parser.add_argument("-t", "--threads", type=int, default=4, help="Specify the number of threads (default is 4)")
     args = parser.parse_args()
-    if not any(vars(args).values()):
+
+    if not (args.username or args.usernames_file or args.password or args.passwords_file or args.url or args.urls_file):
         parser.print_help()
         exit()
+
 
     # Read usernames and passwords from files if provided
     usernames = [args.username] if args.username else []
