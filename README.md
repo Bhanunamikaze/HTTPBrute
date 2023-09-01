@@ -9,7 +9,7 @@ This Python script is a simple HTTP brute-forcing tool designed to test the auth
 ```
 git clone [https://github.com/Bhanunamikaze/ESXiBrute.git](https://github.com/Bhanunamikaze/HTTPBrute.git)
 cd HTTPBrute
-python HTTPBrute.py -u root -P /usr/share/wordlists/ssh_usernames.txt -url http://127.0.0.1 -m POST -e 401 -t 30
+python HTTPBrute.py -u root -P /usr/share/wordlists/rockyou.txt -url http://127.0.0.1 -m POST -e 401 -t 30
 ```
 
 ## Features
@@ -22,8 +22,9 @@ python HTTPBrute.py -u root -P /usr/share/wordlists/ssh_usernames.txt -url http:
 
 ## Usage
 
+### HTTPBrute
 ```
-python HTTPBrute.py -u root -P /usr/share/wordlists/ssh_usernames.txt -url http://127.0.0.1 -m POST -e 401 -t 30
+python HTTPBrute.py -u root -P /usr/share/wordlists/rockyou.txt -url http://127.0.0.1 -m POST -e 401 -t 30
 
 usage: HTTPBrute.py [-h] [-u USERNAME] [-U USERNAMES_FILE] [-p PASSWORD] [-P PASSWORDS_FILE] [-url URL] [-urls URLS_FILE] [-m HTTP_METHOD]
                [-e EXCLUDE_STATUS] [-s SHOW_STATUS] [-t THREADS]
@@ -51,6 +52,24 @@ options:
                         Specify status codes to show only (comma-separated)
   -t THREADS, --threads THREADS
                         Specify the number of threads (default is 4)
+
+```
+
+### Curl Brute
+HTTP Bruteforcer using Curl - Bash Version of HTTPBrute
+```
+python CurlBrute.py -u root -P /usr/share/wordlists/rockyou.txt -url http://127.0.0.1 -m POST -e 401
+
+options:
+  -u <username>        : Specify a single username
+  -U <usernames_file>  : Specify a file containing a list of usernames (one per line)
+  -p <password>        : Specify a single password
+  -P <passwords_file>  : Specify a file containing a list of passwords (one per line)
+  -url <url>           : Specify a single URL
+  -urls <urls_file>    : Specify a file containing a list of URLs (one per line)
+  -m <http_method>     : Specify the HTTP method (GET by default)
+  -e <status_codes>    : Specify status codes to exclude (comma-separated)
+  -s <status_codes>    : Specify status codes to show only (comma-separated)
 
 ```
 
