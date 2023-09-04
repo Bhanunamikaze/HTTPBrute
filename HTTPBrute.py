@@ -4,22 +4,59 @@ from requests.auth import HTTPBasicAuth
 from concurrent.futures import ThreadPoolExecutor
 from tqdm import tqdm
 import time
+import urllib3
+import csv
 
-def make_http_request(username, password, url, pbar):
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+
+def make_http_request(username, password, url, pbar, output_file):
     try:
-        response = requests.request(http_method, url, auth=HTTPBasicAuth(username, password))
+        response = requests.request(http_method, url, auth=HTTPBasicAuth(username, password), timeout=10, verify=False)
         response_code = response.status_code
 
-        pbar.update(1)  # Update the progress bar for all requests
+        # Update the progress bar for all requests
+        pbar.update(1)  
 
         if exclude_status and str(response_code) in exclude_status:
-            return  
-        if show_status and str(response_code) in show_status:
-            print(f"URL: {url} - Username: {username} - Password: {password} - HTTP Method: {http_method} - Response Code: {response_code}")
-        elif not show_status:
-            print(f"URL: {url} - Username: {username} - Password: {password} - HTTP Method: {http_method} - Response Code: {response_code}")
+            return
+
+        result = f"URL: {url},Username: {username},Password: {password},HTTP Method: {http_method},Response Code: {response_code}"
+        
+        if not output_file:
+            # Print to the screen only when specified status code matches
+            if show_status and str(response_code) in show_status:
+                print(result)
+
+        if output_file:
+            result_csv = f"{url},{username},{password},{http_method},{response_code}"
+            write_result_to_csv(result_csv, output_file)
+
     except requests.exceptions.RequestException as e:
-        print(f"URL: {url} - Username: {username} - Password: {password} - HTTP Method: {http_method} - Error: {e}")
+        if isinstance(e, requests.exceptions.ConnectionError):
+            error_csv = f"{url},{username},{password},{http_method},Connection Refused"
+            error_message = f"URL: {url} - Username: {username} - Password: {password} - HTTP Method: {http_method} - Error: Connection Refused"
+        else:
+            error_csv = f"{url},{username},{password},{http_method},{e}"
+            error_message = f"URL: {url} - Username: {username} - Password: {password} - HTTP Method: {http_method} - Error: {e}"
+
+        if output_file:
+            write_result_to_csv(error_csv, output_file)
+        
+        if not output_file:
+            print(error_message)
+
+
+def write_result_to_csv(result, output_file):
+    with open(output_file, mode='a', newline='') as file:
+        writer = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        
+        # Check if the file is empty (no header row yet), and if so, write the header row
+        if file.tell() == 0:
+            writer.writerow(["URL", "Username", "Password", "HTTP Method", "Response Code", "Error (if Any)"])
+
+        writer.writerow(result.split(','))
 
 
 if __name__ == "__main__":
@@ -34,6 +71,8 @@ if __name__ == "__main__":
     parser.add_argument("-e", "--exclude_status", help="Specify status codes to exclude (comma-separated)")
     parser.add_argument("-s", "--show_status", help="Specify status codes to show only (comma-separated)")
     parser.add_argument("-t", "--threads", type=int, default=4, help="Specify the number of threads (default is 4)")
+    parser.add_argument("-o", "--output", help="Specify an output file to save the results")
+
     args = parser.parse_args()
 
     if not (args.username or args.usernames_file or args.password or args.passwords_file or args.url or args.urls_file):
@@ -51,6 +90,7 @@ if __name__ == "__main__":
 
     if args.passwords_file:
         with open(args.passwords_file, "r") as f:
+        #with open(args.passwords_file, "r", encoding="latin-1") as f:
             passwords += [line.strip() for line in f]
 
     # Read URLs from file if provided
@@ -74,7 +114,7 @@ if __name__ == "__main__":
             for username in usernames:
                 for password in passwords:
                     for url in urls:
-                        executor.submit(make_http_request, username, password, url, pbar)
+                        executor.submit(make_http_request, username, password, url, pbar,args.output)
                         
 
     # Calculate and display the elapsed time
