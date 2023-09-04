@@ -19,6 +19,7 @@ python HTTPBrute.py -u root -P /usr/share/wordlists/rockyou.txt -url http://127.
 - Progress bar to visualize the progress of requests.
 - Display of response codes and error messages for diagnosis.
 - Supports various HTTP methods (GET by default).
+- Supports Saving the output to a csv file. 
 
 ## Usage
 
@@ -27,7 +28,7 @@ python HTTPBrute.py -u root -P /usr/share/wordlists/rockyou.txt -url http://127.
 python HTTPBrute.py -u root -P /usr/share/wordlists/rockyou.txt -url http://127.0.0.1 -m POST -e 401 -t 30
 
 usage: HTTPBrute.py [-h] [-u USERNAME] [-U USERNAMES_FILE] [-p PASSWORD] [-P PASSWORDS_FILE] [-url URL] [-urls URLS_FILE] [-m HTTP_METHOD]
-               [-e EXCLUDE_STATUS] [-s SHOW_STATUS] [-t THREADS]
+               [-e EXCLUDE_STATUS] [-s SHOW_STATUS] [-t THREADS] [-o OUTPUT]
 
 Simple HTTP Multi Threaded Bruteforcer
 
