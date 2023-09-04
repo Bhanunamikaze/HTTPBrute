@@ -52,6 +52,8 @@ options:
                         Specify status codes to show only (comma-separated)
   -t THREADS, --threads THREADS
                         Specify the number of threads (default is 4)
+  -o OUTPUT, --output OUTPUT
+                        Specify an output file to save the results
 
 ```
 
